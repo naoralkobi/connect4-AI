@@ -16,7 +16,7 @@ Student ID: 315679985
 
 import random, util, math
 
-from connect4 import Agent
+from connect4 import Agent, GameState
 
 
 def scoreEvaluationFunction(currentGameState):
@@ -57,6 +57,29 @@ class MinimaxAgent(MultiAgentSearchAgent):
     Your minimax agent (question 1)
     """
 
+    def min_max_decision(self, gameState):
+        valid_location = gameState.getLegalActions()
+        best_score = -math.inf
+        best_col = random.choice(valid_location)
+
+        for col in valid_location:
+
+            # Create a copy of the game state
+            self.depth -= 1
+            gameState.switch_turn(gameState.get_piece_player())
+            temp_state = gameState.generateSuccessor(gameState.get_piece_player(), col)
+            score, move = self.min_max_decision(temp_state)
+
+
+            if type(score) is tuple:
+                score = score[0]
+            if score > best_score:
+                best_score = score
+                best_col = col
+        return best_score, best_col
+
+
+
     def getAction(self, gameState):
         """
         Returns self.depth
@@ -67,8 +90,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
         gameState.getLegalActions(agentIndex):
         Returns a list of legal actions for an agent
 
-        gameState.generateSuccessor(agentIndex, action):
-        Returns the successor game state after an agent takes an action
+        geameState.generateSuccessor(agentIndex, action):
+        Returns the successor game stat after an agent takes an action
 
         gameState.isWin():
         Returns whether or not the game state is a winning state for the current turn player
@@ -79,9 +102,45 @@ class MinimaxAgent(MultiAgentSearchAgent):
         gameState.is_terminal()
         Return whether or not that state is terminal
         """
-        
 
+        if gameState.is_terminal() or self.depth == 0:
+            print("current score is + %s" % str(gameState.getScore()))
+            return gameState.getScore(), None
 
+        valid_location = gameState.getLegalActions()
+
+        # case Agent - the maximizing player
+        if self.index:
+            best_score = -math.inf
+            best_col = random.choice(valid_location)
+            for col in valid_location:
+                # Create a copy of the game state
+                self.depth -= 1
+                gameState.switch_turn(gameState.get_piece_player())
+                temp_state = gameState.generateSuccessor(gameState.get_piece_player(), col)
+                score, move = self.getAction(temp_state)
+                if type(score) is tuple:
+                    score = score[0]
+                if score > best_score:
+                    best_score = score
+                    best_col = col
+            return best_score, best_col
+        # case player
+        else:
+            best_score = math.inf
+            best_col = random.choice(valid_location)
+            for col in valid_location:
+                # Create a copy of the game state
+                self.depth -= 1
+                gameState.switch_turn(gameState.get_piece_player())
+                temp_state = gameState.generateSuccessor(gameState.get_piece_player(), col)
+                score, move = self.getAction(temp_state)
+                if type(score) is tuple:
+                    score = score[0]
+                if score < best_score:
+                    best_score = score
+                    best_col = col
+            return best_score, best_col
 
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
