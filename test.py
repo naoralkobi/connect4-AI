@@ -45,11 +45,13 @@ def startTest(depth,agentName,board):
 if __name__ == '__main__':
 
     # assign directory
-    directory = 'test_yourself'
+    directory = '/Users/naoralkobi/Desktop/files/test_yourself'
 
     # iterate over files in
     # that directory
-    for filename in os.listdir(directory):
+    file_name = ["t1.txt", "t2.txt"]
+    # for filename in os.listdir(directory):
+    for filename in file_name:
         f = os.path.join(directory, filename)
         # checking if it is a file
         if os.path.isfile(f):
@@ -57,6 +59,6 @@ if __name__ == '__main__':
             studentResult = startTest(depth, agentName, board)
 
             if result == studentResult:
-                print("Test file:   ***"+f.split('\\')[1] + "***   Good! :)")
+                print("Test file:   ***"+filename + "***   Good! :)")
             else:
-                print("Test file:   ***"+f.split('\\')[1] + "***   Something went wromg... ")
+                print("Test file:   ***"+filename + "***   Something went wromg... ")

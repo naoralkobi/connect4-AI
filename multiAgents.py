@@ -59,31 +59,30 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
     def min_max_decision(self, gameState, current_depth):
         # switch turn.
-        gameState.switch_turn(gameState.get_piece_player())
+        gameState.switch_turn(current_depth)
         if gameState.is_terminal() or self.depth == current_depth:
-            print("current score is + %s" % str(gameState.getScore()))
             return self.evaluationFunction(gameState), None
 
         valid_location = gameState.getLegalActions()
         best_col = random.choice(valid_location)
         if gameState.turn == self.index:
             best_score = -math.inf
+            for col in valid_location:
+                temp_state = gameState.generateSuccessor(gameState.turn, col)
+                score = self.min_max_decision(temp_state, current_depth + 1)[0]
+                if score > best_score:
+                    best_score = score
+                    best_col = col
+            return best_score, best_col
         else:
             best_score = math.inf
-
-        for col in valid_location:
-            # Create a copy of the game state
-
-            temp_state = gameState.generateSuccessor(gameState.turn, col)
-            score = self.min_max_decision(temp_state, current_depth + 1)[0]
-
-            if self.index and score > best_score:
-                best_score = score
-                best_col = col
-            if self.index == 0 and score < best_score:
-                best_score = score
-                best_col = col
-        return best_score, best_col
+            for col in valid_location:
+                temp_state = gameState.generateSuccessor(gameState.turn, col)
+                score = self.min_max_decision(temp_state, current_depth + 1)[0]
+                if score < best_score:
+                    best_score = score
+                    best_col = col
+            return best_score, best_col
 
     def getAction(self, gameState):
         """
@@ -107,8 +106,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         gameState.is_terminal()
         Return whether or not that state is terminal
         """
-
+        # print("now player: " + str(gameState.turn))
         best_score, best_col = self.min_max_decision(gameState, 0)
+        # print("move " + str(best_col))
         return best_col
 
 
