@@ -106,28 +106,89 @@ class MinimaxAgent(MultiAgentSearchAgent):
         gameState.is_terminal()
         Return whether or not that state is terminal
         """
-        # print("now player: " + str(gameState.turn))
         best_score, best_col = self.min_max_decision(gameState, 0)
-        # print("move " + str(best_col))
         return best_col
 
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
+
+    def min_max_decision_ab(self, gameState, current_depth, alpha, beta):
+        # switch turn.
+        gameState.switch_turn(current_depth)
+        if gameState.is_terminal() or self.depth == current_depth:
+            return self.evaluationFunction(gameState), None
+
+        valid_location = gameState.getLegalActions()
+        best_col = random.choice(valid_location)
+        if gameState.turn == self.index:
+            best_score = -math.inf
+            for col in valid_location:
+                temp_state = gameState.generateSuccessor(gameState.turn, col)
+                score = self.min_max_decision_ab(temp_state, current_depth + 1, alpha, beta)[0]
+                if score > best_score:
+                    best_score = score
+                    best_col = col
+                if alpha > score:
+                    alpha = score
+                if beta < alpha:
+                    break
+            return best_score, best_col
+        else:
+            best_score = math.inf
+            for col in valid_location:
+                temp_state = gameState.generateSuccessor(gameState.turn, col)
+                score = self.min_max_decision_ab(temp_state, current_depth + 1, alpha, beta)[0]
+                if score < best_score:
+                    best_score = score
+                    best_col = col
+                if beta < score:
+                    beta = score
+                if beta < alpha:
+                    break
+            return best_score, best_col
+
     def getAction(self, gameState):
         """
             Your minimax agent with alpha-beta pruning (question 2)
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        alpha = -math.inf
+        beta = math.inf
+        best_score, best_col = self.min_max_decision_ab(gameState, 0, alpha, beta)
+        return best_col
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
       Your expectimax agent (question 3)
     """
+    def expectiminimax(self, gameState, current_depth):
+        # switch turn.
+        gameState.switch_turn(current_depth)
+        if gameState.is_terminal() or self.depth == current_depth:
+            return self.evaluationFunction(gameState), None
+
+        valid_location = gameState.getLegalActions()
+        best_col = random.choice(valid_location)
+        if gameState.turn == self.index:
+            best_score = -math.inf
+            for col in valid_location:
+                temp_state = gameState.generateSuccessor(gameState.turn, col)
+                score = self.expectiminimax(temp_state, current_depth + 1)[0]
+                if score > best_score:
+                    best_score = score
+                    best_col = col
+            return best_score, best_col
+        else:
+            best_score = 0
+            for col in valid_location:
+                p = 1 / len(valid_location)
+                temp_state = gameState.generateSuccessor(gameState.turn, col)
+                best_score += p * self.expectiminimax(temp_state, current_depth + 1)[0]
+            return best_score, best_col
 
     def getAction(self, gameState):
         """
         Returns the expectimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        best_score, best_col = self.expectiminimax(gameState, 0)
+        return best_col

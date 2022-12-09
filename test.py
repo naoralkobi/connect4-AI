@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     # iterate over files in
     # that directory
-    file_name = ["t1.txt", "t2.txt"]
+    file_name = ["t1.txt", "t2.txt", "t3.txt", "t4.txt", "t5.txt", "t6.txt"]
     # for filename in os.listdir(directory):
     for filename in file_name:
         f = os.path.join(directory, filename)

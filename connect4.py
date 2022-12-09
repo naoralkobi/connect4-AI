@@ -285,9 +285,6 @@ class GameState:
         GameState.explored.add(state)
         return state
 
-
-
-
 def runGames(graphicMode, gameMode, agent):
     state = GameState()
     print(state.board)
@@ -377,7 +374,7 @@ if __name__ == '__main__':
     graphicMode = True
     gameMode = 1
     depth = 3  # must be at least 3 with different agent then Random
-    type = "MinimaxAgent"
+    type = "ExpectimaxAgent"
 
     agent = None
     if gameMode == 1:
