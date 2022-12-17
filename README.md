@@ -22,9 +22,6 @@ All you need to do for playing the game is three simple steps:
         set gameMode = 1
         and type = "ExpectimaxAgent"
   3. running the game.
-  
-  
-            Enjoy!!
 
       
 
