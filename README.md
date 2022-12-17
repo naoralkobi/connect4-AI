@@ -15,7 +15,6 @@ All you need to do for playing the game is three simple steps:
     1.  for using Minimax:
         set gameMode = 1
         and type = "MinimaxAgent"
-
     2.  for using Alpha-Beta Pruning:
         set gameMode = 1
         and type = "AlphaBetaAgent"
