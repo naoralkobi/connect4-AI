@@ -21,7 +21,10 @@ All you need to do for playing the game is three simple steps:
     3. for using Expectimax:
         set gameMode = 1
         and type = "ExpectimaxAgent"
-  3. running the game! Enjoy.
+  3. running the game.
+  
+  
+            Enjoy!!
 
       
 
