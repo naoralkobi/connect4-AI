@@ -1,8 +1,8 @@
 import numpy as np
-
 import random, util
 import gameUtil as u
 import graphics as g
+from home_page import run_menu_screen
 
 class Agent:
     """
@@ -15,7 +15,7 @@ class Agent:
     def __init__(self, index=0):
         self.index = index
 
-    def getAction(self, state, piece):
+    def getAction(self, state):
         """
         The Agent will receive a GameState and piece and must return an action
         """
@@ -27,7 +27,7 @@ class GameStateData:
         """
         Generates a new data packet by copying information from its predecessor.
         """
-        if prevState == None:
+        if prevState is None:
             self._agentMoved = None
             self._lose = False
             self._win = False
@@ -94,14 +94,14 @@ class GameState:
         actions = []
         if not self.isWin() and not self.isLose():
             for col in range(u.COLUMN_COUNT):
-                if(self.is_valid_location(col)):
+                if self.is_valid_location(col):
                     actions.append(col)
         return actions
 
     def get_piece_player(self):
-        '''
+        """
         return: the current player piece
-        '''
+        """
         if self.turn == 0:
             return u.PLAYER_PIECE
         return u.AI_PIECE
@@ -145,17 +145,17 @@ class GameState:
         return False
 
     def isWin(self):
-        '''Return is the current player is winning'''
+        """Return is the current player is winning"""
         return self.winning(self.get_piece_player())
 
     def isLose(self):
-        '''Return is the opponent player is winning'''
+        """Return is the opponent player is winning"""
         return self.winning(self.get_opp_piece(self.get_piece_player()))
 
     def is_terminal(self):
-        '''
-        Return whether or not that state is terminal
-        '''
+        """
+        Return whether that state is terminal
+        """
         return self.isWin() or self.isLose() or len(self.getLegalActions()) == 0
 
     def pick_best_move(self):
@@ -173,9 +173,9 @@ class GameState:
         return best_col
 
     def evaluate_window(self, window, piece):
-        '''
+        """
         Evaluate the chance of winning for thae specific piece in window in size 4
-        '''
+        """
         score = 0
         opp_piece = self.get_opp_piece(piece)
 
@@ -193,9 +193,9 @@ class GameState:
         return score
 
     def getScore(self):
-        '''
+        """
         :return: score of the board for the current player
-        '''
+        """
         score = 0
         piece = self.get_piece_player()
         ## Score center column
@@ -231,37 +231,37 @@ class GameState:
         return score
 
     def is_valid_location(self, col):
-        '''
+        """
         Return if insert a piece to the specific col is valid
-        '''
+        """
         return self.board[u.ROW_COUNT-1][col] == 0
 
     def get_next_open_row(self, col):
-        '''
+        """
         Return the first empty row in the specific col
-        '''
+        """
         for r in range(u.ROW_COUNT):
             if self.board[r][col] == 0:
                 return r
 
     def drop_piece(self, row, col, piece):
-        '''
+        """
         Change the board in the current state with the action of dropping piece in the specific row,col.
-        '''
+        """
         self.board[row][col] = piece
 
     def get_opp_piece(self, piece):
-        '''
+        """
         return: the opponent player piece
-        '''
+        """
         if piece == u.AI_PIECE:
             return u.PLAYER_PIECE
         return u.AI_PIECE
 
     def switch_turn(self, piece):
-        '''
+        """
         switch the turn in the state and return the updated player turn
-        '''
+        """
         self.turn = (piece +1) % 2
         return self.turn
 
@@ -279,7 +279,7 @@ class GameState:
         # Let agent's logic deal with its action's effects on the board
         state.drop_piece(row, action, piece)
 
-        # Book keeping
+        # Bookkeeping
         state.data._agentMoved = agentIndex
         GameState.explored.add(self)
         GameState.explored.add(state)
@@ -300,13 +300,13 @@ def runGames(graphicMode, gameMode, agent):
         if state.turn == u.PLAYER:
             if graphicMode:
                 col = g.eventListener(state.turn)
-                if col != None:
+                if col is not None:
                     print(col)
             else:
                 col = int(input("Player 1 make your selection (0-6:)"))
                 print(col)
 
-            if col != None:
+            if col is not None:
                 if state.is_valid_location(col):
                     state = state.generateSuccessor(u.PLAYER_PIECE, col)
 
@@ -328,7 +328,7 @@ def runGames(graphicMode, gameMode, agent):
             if gameMode == 2:
                 if graphicMode:
                     col = g.eventListener(state.turn)
-                    if col != None:
+                    if col is not None:
                         print(col)
                 else:
                     col = int(input("Player 2 make your selection (0-6:)"))
@@ -336,7 +336,7 @@ def runGames(graphicMode, gameMode, agent):
             else: #in case we use AI agent
                 col = agent.getAction(state)
 
-            if col != None:
+            if col is not None:
                 if state.is_valid_location(col):
                     state = state.generateSuccessor(u.AI_PIECE, col)
 
@@ -357,11 +357,8 @@ def runGames(graphicMode, gameMode, agent):
         if graphicMode:
             g.draw_board(state.board)
 
-        if (game_over):
+        if game_over:
             g.wait_to_end()
-
-
-
 
 
 
@@ -371,14 +368,17 @@ if __name__ == '__main__':
     # depth - the max depth to explore the minimax tree
     # type - the name of the agent will play as AI_agent (one of "BestRandom", "MinimaxAgent", "AlphaBetaAgent", "ExpectimaxAgent")
 
+
+    gameMode,depth, type_name = run_menu_screen()
+
     graphicMode = True
-    gameMode = 1
-    depth = 3  # must be at least 3 with different agent then Random
-    type = "ExpectimaxAgent"
+    # gameMode = 1
+    # depth = 3  # must be at least 3 with different agent then Random
+    # type = "AlphaBetaAgent"
 
     agent = None
     if gameMode == 1:
-        agentType = util.loadAgent(type)
+        agentType = util.loadAgent(type_name)
         agent = agentType(**{"depth": depth})  # Instantiate agent with agentArgs
 
     runGames(graphicMode, gameMode , agent)

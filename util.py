@@ -59,7 +59,6 @@ def readCommand(argv):
     return args
 
 
-
 def loadAgent(agent):
     # Looks through all pythonPath Directories for the right module,
     pythonPathStr = os.path.expandvars("$PYTHONPATH")
