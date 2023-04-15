@@ -289,7 +289,7 @@ def runGames(graphicMode, gameMode, agent):
     state = GameState()
     print(state.board)
     if graphicMode:
-        g.setScreen()
+        g.set_screen()
         g.draw_board(state.board)
 
     game_over = False
@@ -299,7 +299,7 @@ def runGames(graphicMode, gameMode, agent):
         # ask for player 1 input
         if state.turn == u.PLAYER:
             if graphicMode:
-                col = g.eventListener(state.turn)
+                col = g.event_listener(state.turn)
                 if col is not None:
                     print(col)
             else:
@@ -327,7 +327,7 @@ def runGames(graphicMode, gameMode, agent):
         else:
             if gameMode == 2:
                 if graphicMode:
-                    col = g.eventListener(state.turn)
+                    col = g.event_listener(state.turn)
                     if col is not None:
                         print(col)
                 else:

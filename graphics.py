@@ -8,7 +8,7 @@ global width
 global height
 
 
-def setScreen():
+def set_screen():
     global screen
     global width
     global height
@@ -19,7 +19,7 @@ def setScreen():
     size = (width, height)
     screen = pygame.display.set_mode(size)
 
-def eventListener(turn):
+def event_listener(turn):
     global screen
     global width
     global height
@@ -44,7 +44,7 @@ def eventListener(turn):
 
 def winning(piece, color):
     myfont = pygame.font.SysFont("monospace", 75)
-    lable = myfont.render("Player "+str(piece)+" wins!", 1, color)
+    lable = myfont.render("Player "+str(piece)+" wins!", True, color)
     screen.blit(lable, (40, 10))
 
 def wait_to_end():
@@ -59,11 +59,11 @@ def draw_board(board):
                                 int(r*u.SQUARESIZE+u.SQUARESIZE+u.SQUARESIZE/2)),u.RADIUS )
     for c in range(u.COLUMN_COUNT):
         for r in range(u.ROW_COUNT):
-            if (board[r][c] == u.PLAYER_PIECE):
+            if board[r][c] == u.PLAYER_PIECE:
                 pygame.draw.circle(screen, u.RED, (
                                     int(c * u.SQUARESIZE + u.SQUARESIZE / 2),
                                     height - int(r * u.SQUARESIZE + u.SQUARESIZE / 2)), u.RADIUS)
-            if (board[r][c] == u.AI_PIECE):
+            if board[r][c] == u.AI_PIECE:
                 pygame.draw.circle(screen, u.YELLOW,
                                    (int(c * u.SQUARESIZE + u.SQUARESIZE / 2),
                                     height-int(r * u.SQUARESIZE + u.SQUARESIZE / 2)),
