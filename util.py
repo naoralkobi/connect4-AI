@@ -2,64 +2,11 @@ import os
 import inspect
 import sys
 
-def default(str):
-    return str + ' [Default: %default]'
-
-def parseAgentArgs(str):
-    if str == None:
-        return {}
-    pieces = str.split(',')
-    opts = {}
-    for p in pieces:
-        if '=' in p:
-            key, val = p.split('=')
-        else:
-            key, val = p, 1
-        opts[key] = val
-    return opts
+def default(string):
+    return string + ' [Default: %default]'
 
 
-def readCommand(argv):
-    """
-    Processes the command used to run connect4 from the command line.
-    """
-    from optparse import OptionParser
-    usageStr = """
-    USAGE:      python connect4.py <options>
-    EXAMPLES:   python connect4.py
-                    - starts an interactive game
-              
-    """
-    parser = OptionParser(usageStr)
-
-    parser.add_option('-m', '--gameMode', dest='gameMode', type='int',
-                      help=default('the GAMES mode to play, 1- player vs. AI, 2- player vs. player'), metavar='MODE', default=2)
-    parser.add_option('-d', '--depth', dest='depth', type='int',
-                      help=default('the max depth to explore the minmax tree'), metavar='DEPTH', default=3)
-    parser.add_option('-g', '--graphics', action='store_true', dest='graphics',
-                      help='Display output as graphics', default=True)
-    parser.add_option('-a', '--agent', type='str', dest='agent',
-                      help=default('Agent type to be play as AI agent'), default="Random")
-
-
-    options, otherjunk = parser.parse_args(argv)
-    if len(otherjunk) != 0:
-        raise Exception('Command line input not understood: ' + str(otherjunk))
-    args = dict()
-
-    # Choose an agent
-
-    agentType = loadAgent(options.agent)
-    agent = agentType(**{"depth": options.depth})  # Instantiate agent with agentArgs
-
-    args['gameMode'] = options.gameMode
-    args['agent'] = agent
-    args['graficMode'] = options.graphics
-
-    return args
-
-
-def loadAgent(agent):
+def load_agent(agent):
     # Looks through all pythonPath Directories for the right module,
     pythonPathStr = os.path.expandvars("$PYTHONPATH")
     if pythonPathStr.find(';') == -1:
@@ -84,8 +31,7 @@ def loadAgent(agent):
                     ' is not specified in any *Agents.py.')
 
 
-
-def raiseNotDefined():
+def raise_not_defined():
     fileName = inspect.stack()[1][1]
     line = inspect.stack()[1][2]
     method = inspect.stack()[1][3]

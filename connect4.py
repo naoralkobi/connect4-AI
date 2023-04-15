@@ -19,7 +19,7 @@ class Agent:
         """
         The Agent will receive a GameState and piece and must return an action
         """
-        util.raiseNotDefined()
+        util.raise_not_defined()
 
 class GameStateData:
 
@@ -378,7 +378,7 @@ if __name__ == '__main__':
 
     agent = None
     if gameMode == 1:
-        agentType = util.loadAgent(type_name)
+        agentType = util.load_agent(type_name)
         agent = agentType(**{"depth": depth})  # Instantiate agent with agentArgs
 
     runGames(graphicMode, gameMode , agent)
